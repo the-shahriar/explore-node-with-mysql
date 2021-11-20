@@ -84,7 +84,20 @@ app.post('/userData', (req, res)=> {
         }
     });
     
-    // console.log(id, name, designation);
+})
+
+// delete single entry from database
+app.delete('/userData/:id', (req, res)=> {
+    const id  = req.params.id;
+    console.log(id);
+    db.query(`DELETE FROM user_data WHERE id = ${id}`, (err, result)=> {
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.json(result);
+        }
+    })
 })
 
 app.listen(port, ()=> {
