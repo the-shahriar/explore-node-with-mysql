@@ -72,7 +72,6 @@ app.post('/userData', (req, res)=> {
     const total_amount = req.body.total_amount;
     const paid_amount = installment_1 + installment_2 + installment_3 + installment_4;
     const dues_amount = total_amount - paid_amount;
-    console.log(total_amount, paid_amount, dues_amount);
 
     // inserting to database
     db.query("INSERT INTO user_data (id, name, designation, employee_grade, flat_size, building_name, flat_name, address, phone_number, email, down_payment_percent, installment_1, installment_1_date, pay_order_number_installment_1, installment_2, installment_2_date, pay_order_number_installment_2, installment_3, installment_3_date, pay_order_number_installment_3, installment_4, installment_4_date,pay_order_number_installment_4, total_amount, paid_amount, dues_amount ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [id, name, designation, employee_grade, flat_size, building_name, flat_name, address, phone_number, email, down_payment_percent, installment_1, installment_1_date, pay_order_number_installment_1, installment_2, installment_2_date, pay_order_number_installment_2, installment_3, installment_3_date, pay_order_number_installment_3, installment_4, installment_4_date,pay_order_number_installment_4, total_amount, paid_amount, dues_amount], (err, result)=> {
@@ -84,6 +83,19 @@ app.post('/userData', (req, res)=> {
         }
     });
     
+})
+
+// get single data
+app.get('/userData/:id', (req, res)=> {
+    const id = req.params.id;
+    db.query(`SELECT * FROM user_data WHERE id=${id}`, (err, result)=> {
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.json(result[0]);
+        }
+    })
 })
 
 // delete single entry from database
@@ -99,6 +111,51 @@ app.delete('/userData/:id', (req, res)=> {
         }
     })
 })
+
+
+// update data
+app.put('/userData/:id', (req, res)=>{
+    const id = req.body.id;
+    const name = req.body.name;
+    const designation = req.body.designation;
+    const employee_grade= req.body.employee_grade;
+    const flat_size = req.body.flat_size;
+    const building_name = req.body.building_name;
+    const flat_name = req.body.flat_name;
+    const address = req.body.address;
+    const phone_number = req.body.phone_number;
+    const email = req.body.email;
+    const down_payment_percent = req.body.down_payment_percent;
+    const installment_1 = parseInt(req.body.installment_1);
+    const installment_1_date = req.body.installment_1_date;
+    const pay_order_number_installment_1 = req.body.pay_order_number_installment_1;
+    const installment_2 = parseInt(req.body.installment_2);
+    const installment_2_date = req.body.installment_2_date;
+    const pay_order_number_installment_2 = req.body.pay_order_number_installment_2;
+    const installment_3 = parseInt(req.body.installment_3);
+    const installment_3_date = req.body.installment_3_date;
+    const pay_order_number_installment_3 = req.body.pay_order_number_installment_3;
+    const installment_4 = parseInt(req.body.installment_4);
+    const installment_4_date = req.body.installment_4_date;
+    const pay_order_number_installment_4 = req.body.pay_order_number_installment_4;
+    const total_amount = req.body.total_amount;
+    const paid_amount = installment_1 + installment_2 + installment_3 + installment_4;
+    const dues_amount = total_amount - paid_amount;
+
+    const sql = `UPDATE user_data SET id = ?, name = ?, designation = ?, employee_grade = ?, flat_size = ?, building_name = ?, flat_name = ?, address = ?, phone_number = ?, email = ?, down_payment_percent = ?, installment_1 = ?, installment_1_date = ?, pay_order_number_installment_1 = ?, installment_2 = ?, installment_2_date = ?, pay_order_number_installment_2 = ?, installment_3 = ?, installment_3_date = ?, pay_order_number_installment_3 = ?, installment_4 = ?, installment_4_date = ?, pay_order_number_installment_4 = ?, total_amount = ?, paid_amount = ?, dues_amount = ? WHERE id = ${id}`;
+    
+    db.query(sql, [`${id}`, `${name}`, `${designation}`, `${employee_grade}`, `${flat_size}`, `${building_name}`, `${flat_name}`, `${address}`, `${phone_number}`, `${email}`, `${down_payment_percent}`, `${installment_1}`, `${installment_1_date}`, `${pay_order_number_installment_1}`, `${installment_2}`, `${installment_2_date}`, `${pay_order_number_installment_2}`, `${installment_3}`, `${installment_3_date}`, `${pay_order_number_installment_3}`, `${installment_4}`, `${installment_4_date}`, `${pay_order_number_installment_4}`, `${total_amount}`, `${paid_amount}`, `${dues_amount}`,], (err, result) => {
+
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.json(result);
+        }
+    });
+})
+
+
 
 app.listen(port, ()=> {
     console.log('Server is listening from', port);
